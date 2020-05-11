@@ -15,6 +15,7 @@ I will present below a third solution, which allows to automatically exclude fro
 ## Step-by-step guide
 
 - Set the POM parent to sparkMavenParent:
+
     <parent>
        <groupId>your.package.groupid</groupId>
        <artifactId>sparkMavenParent</artifactId>
