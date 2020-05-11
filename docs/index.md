@@ -6,7 +6,7 @@ Besides, this jars are useless because by default Spark always gives precedence 
 
 On the other hand, it is sometimes necessary to include a more recent version of a jar already included by Hadoop / Spark, but it would be dangerous to always give precedence to jars packaged with the Spark applications component, because they could include the wrong Hadoop, Spark or Scala version.
 
-Common solutions to this issue are either:
+Common solutions to this issue consist in either to:
 - package all your dependencies (Spark + Spark applications) in an über jar
 - shade the dependencies in common by e.g. using the maven-shade-plugin
 
