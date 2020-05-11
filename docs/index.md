@@ -16,11 +16,13 @@ I will present below a third solution, which allows to automatically exclude fro
 
 - Set the POM parent to sparkMavenParent:
 
+```xml
     <parent>
        <groupId>your.package.groupid</groupId>
        <artifactId>sparkMavenParent</artifactId>
        <version>1.0.0</version>
     </parent>
+```
 
 - Do not declare version and scope of Spark dependencies (since they are already defined in sparkMavenParent, they will be ignored anyway), e.g.:
 ```xml
