@@ -14,8 +14,8 @@ I will present below a third solution, which allows to automatically exclude fro
 
 ## Step-by-step guide
 
-- Create a parent POM with all the Hadoop / Spark dependencies
-  Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl help script for that purpose.
+### Create a parent POM with all the Hadoop / Spark dependencies
+Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl help script for that purpose.
   - Usage:
     - Edit the script and adapt the lines below (at the top of the files) to your environment
     The command to list all the Hadoop / Spark jars (`REMOTE_CMD`) is especially important:
@@ -41,7 +41,7 @@ my $SPARK_VERSION = "2.4.0";
 N.B.: you need to be able to SSH to HOSTNAME
     - Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
 
-- Set the POM parent to sparkMavenParent:
+### Set the POM parent to sparkMavenParent:
 
 ```xml
     <parent>
@@ -51,7 +51,8 @@ N.B.: you need to be able to SSH to HOSTNAME
     </parent>
 ```
 
-- Do not declare version and scope of Spark dependencies (since they are already defined in sparkMavenParent, they will be ignored anyway), e.g.:
+### Do not declare version and scope of Spark dependencies
+Since they are already defined in sparkMavenParent, they will be ignored anyway, e.g.:
 
 ```xml
 <dependency>
@@ -64,7 +65,7 @@ N.B.: you need to be able to SSH to HOSTNAME
 </dependency>
 ```
 
-- Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark):
+### Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark)
 
 ```xml
 <dependency>
@@ -74,7 +75,7 @@ N.B.: you need to be able to SSH to HOSTNAME
 </dependency>
 ```
 
-- Do not declare version of spark-testing-base dependency (it is already defined in sparkMavenParent):
+### Do not declare version of spark-testing-base dependency (it is already defined in sparkMavenParent)
 
 ```xml
 <dependency>
@@ -84,7 +85,7 @@ N.B.: you need to be able to SSH to HOSTNAME
 </dependency>
 ```
 
-- Do not overwrite the following properties (they are already defined in sparkMavenParent):
+### Do not overwrite the following properties (they are already defined in sparkMavenParent)
 
 ```xml
 <properties>
@@ -97,7 +98,7 @@ N.B.: you need to be able to SSH to HOSTNAME
 </properties>
 ```
 
-- (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten:
+### (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten
 
 ```xml
 <dependencyManagement>
@@ -112,7 +113,8 @@ N.B.: you need to be able to SSH to HOSTNAME
 </dependencyManagement>
 ```
 
-- (Optional) Set the Spark configuration properties `spark.driver.userClassPathFirst` and `spark.executor.userClassPathFirst` to true when launching your applications (with e.g. spark-submit) in order to give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes:
+### (Optional) Give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes
+Set the Spark configuration properties `spark.driver.userClassPathFirst` and `spark.executor.userClassPathFirst` to true when launching your applications (with e.g. spark-submit):
 ```shell
 /opt/spark/bin/spark-submit (...) --conf spark.driver.userClassPathFirst=true --conf spark.executor.userClassPathFirst=true (...)
 ```
@@ -122,7 +124,6 @@ N.B.: you need to be able to SSH to HOSTNAME
 If  you override the Spark / Hadoop dependencies, this means that your Spark application may be compiled and run with a different version of the library.
 
 Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop:
-
 - no guava dependency in your Spark applications component pom.xml:
   - compilation is done with guava-11.0.2
   - guava-11.0.2 jar is NOT packaged with the Spark applications component RPM
