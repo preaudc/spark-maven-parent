@@ -15,13 +15,9 @@ I will present below a third solution, which allows to automatically exclude fro
 ## Step-by-step guide
 
 - Create a parent POM named sparkMavenParent containing all the Hadoop / Spark dependencies in a `<dependencyManagement>` section
-
 Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl help script for that purpose.
-
   - Usage:
-
     - Edit the script and adapt the lines below (at the top of the files) to your environment. The command to list the Hadoop / Spark jars is especially important:
-
 ```perl
 ## BEGIN - CUSTOM CONF
 # needed to get the list of spark / hadoop jars dependencies
@@ -36,15 +32,12 @@ my $SHORT_SCALA_BINARY_VERSION = "11";
 my $SPARK_VERSION = "2.4.0";
 ## END - CUSTOM CONF
 ```
-
     - Launch the script with the command below to generate the parent POM sparkMavenParent template:
-
 ```shell
 # the command below creates a file pom.xml.template
 ./src/main/scripts/createSparkMavenParentPom.pl -hostname HOSTNAME
 ```
 N.B.: you need to be able to SSH to HOSTNAME
-
     - Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
 
 - Set the POM parent to sparkMavenParent:
