@@ -4,6 +4,7 @@ use Getopt::Long;
 use strict;
 use warnings;
 
+## BEGIN - CUSTOM CONF
 # needed to get the list of spark / hadoop jars dependencies
 my $REMOTE_CMD = "ls -1 {/opt/hadoop/share/hadoop/*/lib,/opt/spark/jars}/*.jar";
 
@@ -14,8 +15,21 @@ my $SCALA_BINARY_VERSION = "2.11";
 my $SCALA_VERSION = "2.11.12";
 my $SHORT_SCALA_BINARY_VERSION = "11";
 my $SPARK_VERSION = "2.4.0";
+## END - CUSTOM CONF
 
-my $pom_header = qq(   <!-- DEPENDENCIES SECTION -->
+my $pom_header = qq(<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <!-- PROJECT DESCRIPTION SECTION -->
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>my.group.id</groupId>
+   <artifactId>sparkMavenParent</artifactId>
+   <version>1.0.0</version>
+   <packaging>pom</packaging>
+   <name>sparkMavenParent</name>
+   <description>Parent POM for Spark applications components</description>
+
+   <!-- DEPENDENCIES SECTION -->
    <dependencyManagement>
       <dependencies>
 
@@ -39,7 +53,9 @@ my $pom_footer = qq(         <!-- Test dependencies -->
       <scala.version>$SCALA_VERSION</scala.version>
       <short.scala.binary.version>$SHORT_SCALA_BINARY_VERSION</short.scala.binary.version>
       <spark.version>$SPARK_VERSION</spark.version>
-   </properties>);
+   </properties>
+
+</project>);
 
 sub get_jar_name_and_version($) {
   my ($jar) = @_;
@@ -119,7 +135,7 @@ foreach my $k (keys %$jar_list) {
   close CMD;
 }
 
-open(POM, '>', "pom.xml") or die "$!";
+open(POM, '>', "pom.xml.template") or die "$!";
 print POM "$pom_header\n";
 foreach my $dependency (sort {$a->[0] cmp $b->[0]} @dependencies) {
   my (undef, $group_id, $artifact_id, $version) = @$dependency;

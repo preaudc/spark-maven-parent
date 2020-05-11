@@ -1,4 +1,4 @@
-# How to not package Hadoop / Spark transitive dependencies in SparkApplications components
+# How to not package Hadoop / Spark transitive dependencies in Spark applications components
 
 A Spark applications component is frequently oversized because it contains jars (i.e. Hadoop, Scala, or even Spark jars) which are already included by Hadoop / Spark.
 
@@ -14,11 +14,44 @@ I will present below a third solution, which allows to automatically exclude fro
 
 ## Step-by-step guide
 
+- Create a parent POM named sparkMavenParent containing all the Hadoop / Spark dependencies in a `<dependencyManagement>` section
+
+Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl help script for that purpose.
+
+  - Usage:
+
+    - Edit the script and adapt the lines below (at the top of the files) to your environment. The command to list the Hadoop / Spark jars is especially important:
+
+```perl
+## BEGIN - CUSTOM CONF
+# needed to get the list of spark / hadoop jars dependencies
+my $REMOTE_CMD = "ls -1 {/opt/hadoop/share/hadoop/*/lib,/opt/spark/jars}/*.jar";
+
+# pom properties
+my $HADOOP_VERSION = "2.8.3";
+my $JDK_VERSION = "1.8";
+my $SCALA_BINARY_VERSION = "2.11";
+my $SCALA_VERSION = "2.11.12";
+my $SHORT_SCALA_BINARY_VERSION = "11";
+my $SPARK_VERSION = "2.4.0";
+## END - CUSTOM CONF
+```
+
+    - Launch the script with the command below to generate the parent POM sparkMavenParent template:
+
+```shell
+# the command below creates a file pom.xml.template
+./src/main/scripts/createSparkMavenParentPom.pl -hostname HOSTNAME
+```
+N.B.: you need to be able to SSH to HOSTNAME
+
+    - Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
+
 - Set the POM parent to sparkMavenParent:
 
 ```xml
     <parent>
-       <groupId>your.package.groupid</groupId>
+       <groupId>my.group.id</groupId>
        <artifactId>sparkMavenParent</artifactId>
        <version>1.0.0</version>
     </parent>
@@ -70,7 +103,7 @@ I will present below a third solution, which allows to automatically exclude fro
 </properties>
 ```
 
-- (Optional) Declare in a `<dependencyManagement>` block the Hadoop / Spark dependencies that DO need to be overwritten:
+- (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten:
 
 ```xml
 <dependencyManagement>
@@ -96,17 +129,17 @@ If  you override the Spark / Hadoop dependencies, this means that your Spark app
 
 Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop:
 
-- no guava dependency in your SparkApplications component pom.xml:
+- no guava dependency in your Spark applications component pom.xml:
   - compilation is done with guava-11.0.2
-  - guava-11.0.2 jar is NOT packaged with the SparkApplications component RPM
+  - guava-11.0.2 jar is NOT packaged with the Spark applications component RPM
   - run is executed with guava-11.0.2
-- guava-28.2-jre is added in a <dependencies> block in your SparkApplications component pom.xml:
+- guava-28.2-jre is added in a  `<dependencies>` section in your Spark applications component pom.xml:
   - compilation is done with guava-28.2-jre
-  - guava-28.2-jre jar is NOT packaged with the SparkApplications component RPM
+  - guava-28.2-jre jar is NOT packaged with the Spark applications component RPM
   - run is executed with guava-11.0.2
-- guava-28.2-jre is added in a <dependencyManagement> block in your SparkApplications component pom.xml:
+- guava-28.2-jre is added in a `<dependencyManagement>` section in your Spark applications component pom.xml:
   - compilation is done with guava-28.2-jre
-  - guava-28.2-jre jar is packaged with the SparkApplications component RPM
-  - userClassPathFirst value in your sparkAppRunner job properties:
+  - guava-28.2-jre jar is packaged with the Spark applications component RPM
+  - userClassPathFirst value in your spark-submit command:
     - false or not defined: run is executed with guava-11.0.2
     - true: run is executed with guava-28.2-jre
