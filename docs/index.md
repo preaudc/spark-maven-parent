@@ -65,7 +65,7 @@ I will present below a third solution, which allows to automatically exclude fro
 </properties>
 ```
 
-- (Optional) Declare in a <dependencyManagement> block the Hadoop / Spark dependencies that DO need to be overwritten:
+- (Optional) Declare in a `<dependencyManagement>` block the Hadoop / Spark dependencies that DO need to be overwritten:
 ```xml
 <dependencyManagement>
    <dependencies>
