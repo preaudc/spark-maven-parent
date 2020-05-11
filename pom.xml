@@ -1,29 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-   <!-- PROJECT DESCRIPTION SECTION -->
-   <modelVersion>4.0.0</modelVersion>
-   <groupId>com.kelkoogroup.dataplatform</groupId>
-   <artifactId>kelkooSparkMavenParent</artifactId>
-   <version>1.2.1-SNAPSHOT</version>
-   <packaging>pom</packaging>
-   <name>kelkooSparkMavenParent</name>
-   <description>Common component for dataplatform applications</description>
-
-   <!-- PARENT SECTION -->
-   <parent>
-      <groupId>com.kelkoo</groupId>
-      <artifactId>kelkooMavenParent</artifactId>
-      <version>2.9.1</version>
-   </parent>
-
-   <!-- Source control management SECTION -->
-   <scm>
-      <connection>scm:git|git@gitlab.corp.kelkoo.net:data-platform/kelkoosparkmavenparent.git</connection>
-      <url>http://gitlab.corp.kelkoo.net/data-platform/kelkoosparkmavenparent</url>
-      <tag>HEAD</tag>
-   </scm>
-
    <!-- DEPENDENCIES SECTION -->
    <dependencyManagement>
       <dependencies>
@@ -1345,5 +1319,3 @@
       <short.scala.binary.version>11</short.scala.binary.version>
       <spark.version>2.4.0</spark.version>
    </properties>
-
-</project>
