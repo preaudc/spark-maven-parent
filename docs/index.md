@@ -16,9 +16,9 @@ I will present below a third solution, which allows to automatically exclude fro
 
 ### Create a parent POM with all the Hadoop / Spark dependencies
 Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl help script for that purpose.
-  - Usage:
-    - Edit the script and adapt the lines below (at the top of the files) to your environment
-    The command to list all the Hadoop / Spark jars (`REMOTE_CMD`) is especially important:
+- Usage:
+  - Edit the script and adapt the lines below (at the top of the files) to your environment
+The command to list all the Hadoop / Spark jars (`REMOTE_CMD`) is especially important:
 ```perl
 ## BEGIN - CUSTOM CONF
 # needed to get the list of spark / hadoop jars dependencies
@@ -33,15 +33,15 @@ my $SHORT_SCALA_BINARY_VERSION = "11";
 my $SPARK_VERSION = "2.4.0";
 ## END - CUSTOM CONF
 ```
-    - Launch the script with the command below to generate the parent POM sparkMavenParent template:
+  - Launch the script with the command below to generate the parent POM sparkMavenParent template:
 ```shell
 # the command below creates a file pom.xml.template
 ./src/main/scripts/createSparkMavenParentPom.pl -hostname HOSTNAME
 ```
 N.B.: you need to be able to SSH to HOSTNAME
-    - Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
+  - Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
 
-### Set the POM parent to sparkMavenParent:
+### Set the POM parent to sparkMavenParent
 
 ```xml
     <parent>
@@ -75,7 +75,8 @@ Since they are already defined in sparkMavenParent, they will be ignored anyway,
 </dependency>
 ```
 
-### Do not declare version of spark-testing-base dependency (it is already defined in sparkMavenParent)
+### Do not declare version of spark-testing-base dependency
+It is already defined in sparkMavenParent:
 
 ```xml
 <dependency>
@@ -85,7 +86,8 @@ Since they are already defined in sparkMavenParent, they will be ignored anyway,
 </dependency>
 ```
 
-### Do not overwrite the following properties (they are already defined in sparkMavenParent)
+### Do not overwrite the following properties
+They are already defined in sparkMavenParent:
 
 ```xml
 <properties>
