@@ -25,6 +25,7 @@ I will present below a third solution, which allows to automatically exclude fro
 ```
 
 - Do not declare version and scope of Spark dependencies (since they are already defined in sparkMavenParent, they will be ignored anyway), e.g.:
+
 ```xml
 <dependency>
    <groupId>org.apache.spark</groupId>
@@ -37,6 +38,7 @@ I will present below a third solution, which allows to automatically exclude fro
 ```
 
 - Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark):
+
 ```xml
 <dependency>
    <groupId>org.apache.hadoop</groupId>
@@ -46,6 +48,7 @@ I will present below a third solution, which allows to automatically exclude fro
 ```
 
 - Do not declare version of spark-testing-base dependency (it is already defined in sparkMavenParent):
+
 ```xml
 <dependency>
    <groupId>com.holdenkarau</groupId>
@@ -55,6 +58,7 @@ I will present below a third solution, which allows to automatically exclude fro
 ```
 
 - Do not overwrite the following properties (they are already defined in sparkMavenParent):
+
 ```xml
 <properties>
    <hadoop.version>2.8.3</hadoop.version>
@@ -67,6 +71,7 @@ I will present below a third solution, which allows to automatically exclude fro
 ```
 
 - (Optional) Declare in a `<dependencyManagement>` block the Hadoop / Spark dependencies that DO need to be overwritten:
+
 ```xml
 <dependencyManagement>
    <dependencies>
