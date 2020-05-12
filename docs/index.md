@@ -2,7 +2,7 @@
 
 A Spark applications component is frequently oversized because it contains jars (i.e. Hadoop, Scala, or even Spark) which are already included by Hadoop / Spark.
 
-Besides, this jars are useless because by default Spark always gives precedence to jars provided by Hadoop / Spark over the ones packaged with the Spark applications component.
+Besides, these jars are useless because by default Spark always gives precedence to jars provided by Hadoop / Spark over the ones packaged with the Spark applications component.
 
 On the other hand, it is sometimes necessary to include a more recent version of a jar already included by Hadoop / Spark, but it would be dangerous to always give precedence to jars packaged with the Spark applications component, because they could include jars with the wrong Hadoop, Spark or Scala version.
 
