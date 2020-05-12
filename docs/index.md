@@ -7,28 +7,24 @@ Besides, this jars are useless because by default Spark always gives precedence 
 On the other hand, it is sometimes necessary to include a more recent version of a jar already included by Hadoop / Spark, but it would be dangerous to always give precedence to jars packaged with the Spark applications component, because they could include jars with the wrong Hadoop, Spark or Scala version.
 
 Common solutions to this issue consist in either to:
-- shade the dependencies in common by e.g. using the maven-shade-plugin
-- package all your dependencies (Spark + Spark applications) in an über jar
+- Shade the dependencies in common by e.g. using the maven-shade-plugin.
+- Package all your dependencies (Spark + Spark applications) in an über jar.
 
 I will present below a third solution, which allows to automatically exclude from the Spark applications component the dependencies in common with Hadoop / Spark (and still allows to override safely some of them when necessary).
 
 ## Step-by-step guide
 
 This solution consists in:
-1. Creating a parent POM **sparkMavenParent** which will include all the Hadoop / Spark dependencies with a **provided** scope
-1. Set the parent POM of your Spark applications component to **sparkMavenParent** so that all Hadoop / Spark dependencies are automatically excluded at the packaging step
+1. Creating a parent POM **sparkMavenParent** which will include all the Hadoop / Spark dependencies with a **provided** scope.
+1. Set the parent POM of your Spark applications component to **sparkMavenParent** so that all Hadoop / Spark dependencies are automatically excluded at the packaging step.
 
 ### 1. Create a parent POM with all the Hadoop / Spark dependencies
 Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl helper script (in `src/main/scripts/createSparkMavenParentPom.pl`) for that purpose.
 
 #### 1.1 Edit the script and adapt the lines below (at the top of the files) to your environment
-The command to list all the Hadoop / Spark jars (`REMOTE_CMD`) is especially important:
 
 ```perl
 ## BEGIN - CUSTOM CONF
-# needed to get the list of spark / hadoop jars dependencies
-my $REMOTE_CMD = "ls -1 {/opt/hadoop/share/hadoop/*/lib,/opt/spark/jars}/*.jar";
-
 # pom properties
 my $HADOOP_VERSION = "2.8.3";
 my $JDK_VERSION = "1.8";
@@ -43,12 +39,13 @@ my $SPARK_VERSION = "2.4.0";
 
 ```shell
 # the command below creates a file pom.xml.template
-./createSparkMavenParentPom.pl -hostname HOSTNAME
+./createSparkMavenParentPom.pl -file JARS_FILE
 ```
 
-**N.B.**: there are two requirements for this script to work properly:
-- you need to be able to ssh to `HOSTNAME`
-- all the Hadoop / Spark dependencies are expected to be present in the `$HOME/.m2` repository on your local machine
+**N.B.**:
+- _**JARS_FILE**_ is a file containing all the Hadoop / Spark jars dependencies, you can create it for example with the following command: `ssh <HADOOP_SPARK_HOSTNAME> "ls -1 {/opt/hadoop/share/hadoop/*/lib,/opt/spark/jars}/*.jar" > hadoop_spark_jars.list`.
+- This script will find in the `$HOME/.m2` repository on your local machine to get the group and artifact ids from the Hadoop / Spark jar name and version.
+- All Hadoop / Spark dependencies which are _not_ found in the `$HOME/.m2` repository will be written in the `jars_not_in_m2.list` file (and hence not included in the `pom.xml.template`).
 
 #### 1.3 Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
 
@@ -137,7 +134,6 @@ Set the Spark configuration properties `spark.driver.userClassPathFirst` and `sp
 ```
 
 ## Notes on Hadoop / Spark dependency override
-
 If  you override the Spark / Hadoop dependencies, this means that your Spark application may be compiled and run with a different version of the library.
 
 Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop:

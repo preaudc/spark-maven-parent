@@ -5,9 +5,6 @@ use strict;
 use warnings;
 
 ## BEGIN - CUSTOM CONF
-# needed to get the list of spark / hadoop jars dependencies
-my $REMOTE_CMD = "ls -1 {/opt/hadoop/share/hadoop/*/lib,/opt/spark/jars}/*.jar";
-
 # pom properties
 my $HADOOP_VERSION = "2.8.3";
 my $JDK_VERSION = "1.8";
@@ -63,6 +60,7 @@ sub get_jar_name_and_version($) {
   return ($jar_name, $jar_version);
 }
 
+# function to compare jar versions
 sub eval_version($) {
   my ($version) = @_;
   my @vals_rev = ();
@@ -79,6 +77,7 @@ sub eval_version($) {
   return $val_version;
 }
 
+# get group and artifact id from jar path in $HOME/.m2 repository
 sub get_group_and_artifact($$) {
   my ($line, $version) = @_;
   my ($group_id, $artifact_id) = ($line =~ /^$ENV{'HOME'}\/.m2\/repository\/(\S+)\/([^\/]+)\/$version/);
@@ -86,18 +85,19 @@ sub get_group_and_artifact($$) {
   return ($group_id, $artifact_id);
 }
 
+# print usage
 sub printUsage() {
-  print STDERR "Usage:\n\t$0 -hostname HOSTNAME\n";
+  print STDERR "Usage:\n\t$0 -file JARS_FILE\n";
   exit 1;
 }
 
-my $hostname = undef;
-printUsage() unless (GetOptions("hostname=s" => \$hostname) and defined $hostname);
+my $jars_file = undef;
+printUsage() unless (GetOptions("file=s" => \$jars_file) and defined $jars_file);
 
+# get the list of jars with version, dedup if necessary (priority on Spark version, then higher version)
 my $jar_list = {};
-my $cmd = "ssh $hostname \"$REMOTE_CMD\"";
-open(CMD, "$cmd |") or die "$!";
-while (my $cmd_line = <CMD>) {
+open(FILE, "$jars_file") or die "$jars_file: $!";
+while (my $cmd_line = <FILE>) {
   chomp $cmd_line;
   my @path = split("/", $cmd_line);
   my $jar = $path[$#path];
@@ -111,30 +111,32 @@ while (my $cmd_line = <CMD>) {
     $jar_list->{$jar_name} = $jar_version;
   }
 }
-close CMD;
+close FILE;
 
+# loop on each jar to get group id, artifact id and version
 my @dependencies = ();
+my @dependencies_not_in_m2_dir=();
 foreach my $k (keys %$jar_list) {
   my $version = $jar_list->{$k};
-  open(CMD, "find $ENV{'HOME'}/.m2/repository -type d -name \"$version\" -print0 | grep -FzZ \"$k/$version\" 2>/dev/null |") or die "$!";
-  while (my $ps_line = <CMD>) {
-    chomp $ps_line;
-    if ($ps_line ne "") {
-      my ($group_id, $artifact_id) = get_group_and_artifact($ps_line, $version);
-      $artifact_id =~ s/_$SCALA_BINARY_VERSION$/_\${scala.binary.version}/;
-      if ($group_id eq 'org.apache.hadoop') {
-        $version =~ s/^$HADOOP_VERSION$/\${hadoop.version}/;
-      } elsif ($group_id eq 'org.apache.spark') {
-        $version =~ s/^$SPARK_VERSION$/\${spark.version}/;
-      } elsif ($group_id eq 'org.scala-lang') {
-        $version =~ s/^$SCALA_VERSION$/\${scala.version}/;
-      }
-      push @dependencies, ["$group_id.$artifact_id", $group_id, $artifact_id, $version];
+  my $ps_line = qx(find $ENV{'HOME'}/.m2/repository -type d -name "$version" -print0 | grep -FzZ "$k/$version" 2>/dev/null);
+  chomp $ps_line;
+  if ($ps_line ne "") {
+    my ($group_id, $artifact_id) = get_group_and_artifact($ps_line, $version);
+    $artifact_id =~ s/_$SCALA_BINARY_VERSION$/_\${scala.binary.version}/;
+    if ($group_id eq 'org.apache.hadoop') {
+      $version =~ s/^$HADOOP_VERSION$/\${hadoop.version}/;
+    } elsif ($group_id eq 'org.apache.spark') {
+      $version =~ s/^$SPARK_VERSION$/\${spark.version}/;
+    } elsif ($group_id eq 'org.scala-lang') {
+      $version =~ s/^$SCALA_VERSION$/\${scala.version}/;
     }
+    push @dependencies, ["$group_id.$artifact_id", $group_id, $artifact_id, $version];
+  } else {
+    push @dependencies_not_in_m2_dir, "$k-$jar_list->{$k}.jar";
   }
-  close CMD;
 }
 
+# print POM template
 open(POM, '>', "pom.xml.template") or die "$!";
 print POM "$pom_header\n";
 foreach my $dependency (sort {$a->[0] cmp $b->[0]} @dependencies) {
@@ -148,3 +150,10 @@ foreach my $dependency (sort {$a->[0] cmp $b->[0]} @dependencies) {
 }
 print POM "\n$pom_footer\n";
 close POM;
+
+# print jars whose version was not found in $HOME/.m2 repository
+open(NOT_IN_M2, '>', "jars_not_in_m2.list") or die "$!";
+foreach my $jar (sort @dependencies_not_in_m2_dir) {
+  print NOT_IN_M2 "$jar\n";
+}
+close NOT_IN_M2;
