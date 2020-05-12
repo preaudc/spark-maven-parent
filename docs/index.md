@@ -128,7 +128,7 @@ They are already defined in **sparkMavenParent**:
 ```
 
 #### 2.7 (Optional) Give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes
-Set the Spark configuration properties `spark.driver.userClassPathFirst` and `spark.executor.userClassPathFirst` to true when launching your applications (with e.g. spark-submit):
+Set the Spark configuration properties `spark.driver.userClassPathFirst` and `spark.executor.userClassPathFirst` to true when launching your applications (with e.g. `spark-submit`):
 ```shell
 /opt/spark/bin/spark-submit (...) --conf spark.driver.userClassPathFirst=true --conf spark.executor.userClassPathFirst=true (...)
 ```
@@ -148,6 +148,6 @@ Let's look at an example with the guava library, which version 11.0.2 is include
 - _**guava-28.2-jre**_ is added in a `<dependencyManagement>` section in your Spark applications component `pom.xml`:
   - compilation is done with _**guava-28.2-jre**_
   - _**guava-28.2-jre**_ jar is packaged with the Spark applications component RPM
-  - userClassPathFirst value in your spark-submit command:
+  - userClassPathFirst value in your `spark-submit` command:
     - false or not defined: run is executed with _**guava-11.0.2**_
     - true: run is executed with _**guava-28.2-jre**_
