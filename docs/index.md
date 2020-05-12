@@ -41,8 +41,8 @@ my $SPARK_VERSION = "2.4.0";
 ```
 
 - N.B.: there are two requirements for this script to work properly:
-  - you need to be able to ssh to HOSTNAME
-  - all the Hadoop / Spark dependencies are expected to be present in the $HOME/.m2 repository on your local machine
+  - you need to be able to ssh to `HOSTNAME`
+  - all the Hadoop / Spark dependencies are expected to be present in the `$HOME/.m2` repository on your local machine
 - Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
 - Compile and deploy it
 
