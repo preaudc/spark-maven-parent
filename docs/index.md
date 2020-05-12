@@ -134,7 +134,7 @@ If  you override the Spark / Hadoop dependencies, this means that your Spark app
 
 Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop:
 - no guava dependency in your Spark applications component `pom.xml`:
-  - compilation is done with *guava-11.0.2*
+  - compilation is done with **guava-11.0.2**
   - *guava-11.0.2* jar is NOT packaged with the Spark applications component RPM
   - run is executed with *guava-11.0.2*
 - *guava-28.2-jre* is added in a  `<dependencies>` section in your Spark applications component `pom.xml`:
