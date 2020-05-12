@@ -44,7 +44,7 @@ my $SPARK_VERSION = "2.4.0";
 
 **N.B.**:
 - _**JARS_FILE**_ is a file containing all the Hadoop / Spark jars dependencies, you can create it for example with the following command: `ssh <HADOOP_SPARK_HOSTNAME> "ls -1 {/opt/hadoop/share/hadoop/*/lib,/opt/spark/jars}/*.jar" > hadoop_spark_jars.list`
-- This script will scan the `$HOME/.m2` repository on your local machine to get the group and artifact ids from the Hadoop / Spark jar name and version.
+- This script will scan the `$HOME/.m2` repository on your local machine to get the group and artifact ids from the Hadoop / Spark jar name and version (I said it was quick & dirty :wink:).
 - All Hadoop / Spark dependencies which are _not_ found in the `$HOME/.m2` repository will be written in the `jars_not_in_m2.list` file (and hence not included in the `pom.xml.template`).
 
 #### 1.3 Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
