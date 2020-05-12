@@ -15,11 +15,11 @@ I will present below a third solution, which allows to automatically exclude fro
 ## Step-by-step guide
 
 This solution consists in:
-1. Creating a parent POM **sparkMavenParent** which will include all the Hadoop / Spark dependencies with a **provided** scope.
+1. Creating a parent POM **sparkMavenParent** which will include all the Hadoop / Spark dependencies with a **provided** scope (see e.g. this example: [pom.xml.template](https://github.com/preaudc/spark-maven-parent/blob/master/pom.xml.template))
 1. Set the parent POM of your Spark applications component to **sparkMavenParent** so that all Hadoop / Spark dependencies are automatically excluded at the packaging step.
 
 ### 1. Create a parent POM with all the Hadoop / Spark dependencies
-Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl helper script (in `src/main/scripts/createSparkMavenParentPom.pl`) for that purpose.
+Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl helper script ([createSparkMavenParentPom.pl](https://github.com/preaudc/spark-maven-parent/blob/master/src/main/scripts/createSparkMavenParentPom.pl)) for that purpose.
 
 #### 1.1 Edit the script and adapt the lines below (at the top of the file) to your environment
 
