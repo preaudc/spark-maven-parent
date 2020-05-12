@@ -1,14 +1,14 @@
 # How to not package Hadoop / Spark transitive dependencies in Spark applications components
 
-A Spark applications component is frequently oversized because it contains jars (i.e. Hadoop, Scala, or even Spark jars) which are already included by Hadoop / Spark.
+A Spark applications component is frequently oversized because it contains jars (i.e. Hadoop, Scala, or even Spark) which are already included by Hadoop / Spark.
 
 Besides, this jars are useless because by default Spark always gives precedence to jars provided by Hadoop / Spark over the ones packaged with the Spark applications component.
 
-On the other hand, it is sometimes necessary to include a more recent version of a jar already included by Hadoop / Spark, but it would be dangerous to always give precedence to jars packaged with the Spark applications component, because they could include the wrong Hadoop, Spark or Scala version.
+On the other hand, it is sometimes necessary to include a more recent version of a jar already included by Hadoop / Spark, but it would be dangerous to always give precedence to jars packaged with the Spark applications component, because they could include jars with the wrong Hadoop, Spark or Scala version.
 
 Common solutions to this issue consist in either to:
-- package all your dependencies (Spark + Spark applications) in an über jar
 - shade the dependencies in common by e.g. using the maven-shade-plugin
+- package all your dependencies (Spark + Spark applications) in an über jar
 
 I will present below a third solution, which allows to automatically exclude from the Spark applications component the dependencies in common with Hadoop / Spark (and still allows to override safely some of them when necessary).
 
@@ -40,10 +40,15 @@ my $SPARK_VERSION = "2.4.0";
 ./createSparkMavenParentPom.pl -hostname HOSTNAME
 ```
 
-N.B.: you need to be able to ssh to HOSTNAME
+N.B.: there are two requirements for this script to work properly:
+  - you need to be able to ssh to HOSTNAME
+  - all the Hadoop / Spark dependencies are expected to be present in the $HOME/.m2 repository on your local machine
 - Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
+- Compile and deploy it
 
-### Set the POM parent to sparkMavenParent
+### Update your Spark applications component POM
+
+#### Set the POM parent to sparkMavenParent
 
 ```xml
     <parent>
@@ -53,7 +58,7 @@ N.B.: you need to be able to ssh to HOSTNAME
     </parent>
 ```
 
-### Do not declare version and scope of Spark dependencies
+#### Do not declare version and scope of Spark dependencies
 Since they are already defined in sparkMavenParent, they will be ignored anyway, e.g.:
 
 ```xml
@@ -67,7 +72,7 @@ Since they are already defined in sparkMavenParent, they will be ignored anyway,
 </dependency>
 ```
 
-### Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark)
+#### Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark)
 
 ```xml
 <dependency>
@@ -77,7 +82,7 @@ Since they are already defined in sparkMavenParent, they will be ignored anyway,
 </dependency>
 ```
 
-### Do not declare version of spark-testing-base dependency
+#### Do not declare version of spark-testing-base dependency
 It is already defined in sparkMavenParent:
 
 ```xml
@@ -88,7 +93,7 @@ It is already defined in sparkMavenParent:
 </dependency>
 ```
 
-### Do not overwrite the following properties
+#### Do not overwrite the following properties
 They are already defined in sparkMavenParent:
 
 ```xml
@@ -102,7 +107,7 @@ They are already defined in sparkMavenParent:
 </properties>
 ```
 
-### (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten
+#### (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten
 
 ```xml
 <dependencyManagement>
@@ -117,13 +122,13 @@ They are already defined in sparkMavenParent:
 </dependencyManagement>
 ```
 
-### (Optional) Give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes
+#### (Optional) Give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes
 Set the Spark configuration properties `spark.driver.userClassPathFirst` and `spark.executor.userClassPathFirst` to true when launching your applications (with e.g. spark-submit):
 ```shell
 /opt/spark/bin/spark-submit (...) --conf spark.driver.userClassPathFirst=true --conf spark.executor.userClassPathFirst=true (...)
 ```
 
-## Hadoop / Spark dependency override
+## Notes on Hadoop / Spark dependency override
 
 If  you override the Spark / Hadoop dependencies, this means that your Spark application may be compiled and run with a different version of the library.
 
