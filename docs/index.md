@@ -133,17 +133,17 @@ Set the Spark configuration properties `spark.driver.userClassPathFirst` and `sp
 If  you override the Spark / Hadoop dependencies, this means that your Spark application may be compiled and run with a different version of the library.
 
 Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop:
-- no guava dependency in your Spark applications component pom.xml:
-  - compilation is done with guava-11.0.2
-  - guava-11.0.2 jar is NOT packaged with the Spark applications component RPM
-  - run is executed with guava-11.0.2
-- guava-28.2-jre is added in a  `<dependencies>` section in your Spark applications component pom.xml:
-  - compilation is done with guava-28.2-jre
-  - guava-28.2-jre jar is NOT packaged with the Spark applications component RPM
-  - run is executed with guava-11.0.2
-- guava-28.2-jre is added in a `<dependencyManagement>` section in your Spark applications component pom.xml:
-  - compilation is done with guava-28.2-jre
-  - guava-28.2-jre jar is packaged with the Spark applications component RPM
+- no guava dependency in your Spark applications component `pom.xml`:
+  - compilation is done with *guava-11.0.2*
+  - *guava-11.0.2* jar is NOT packaged with the Spark applications component RPM
+  - run is executed with *guava-11.0.2*
+- *guava-28.2-jre* is added in a  `<dependencies>` section in your Spark applications component `pom.xml`:
+  - compilation is done with *guava-28.2-jre*
+  - *guava-28.2-jre* jar is NOT packaged with the Spark applications component RPM
+  - run is executed with *guava-11.0.2*
+- *guava-28.2-jre* is added in a `<dependencyManagement>` section in your Spark applications component `pom.xml`:
+  - compilation is done with *guava-28.2-jre*
+  - *guava-28.2-jre* jar is packaged with the Spark applications component RPM
   - userClassPathFirst value in your spark-submit command:
-    - false or not defined: run is executed with guava-11.0.2
-    - true: run is executed with guava-28.2-jre
+    - false or not defined: run is executed with *guava-11.0.2*
+    - true: run is executed with *guava-28.2-jre*
