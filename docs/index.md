@@ -14,6 +14,10 @@ I will present below a third solution, which allows to automatically exclude fro
 
 ## Step-by-step guide
 
+This solutions consists in:
+1. Creating a parent POM **sparkMavenParent** which will include all the Hadoop / Spark dependencies with a **provided** scope
+1. Set the parent POM of your Spark applications component to **sparkMavenParent** so that all Hadoop / Spark dependencies are automatically excluded at the packaging step
+
 ### 1. Create a parent POM with all the Hadoop / Spark dependencies
 Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl helper script (in `src/main/scripts/createSparkMavenParentPom.pl`) for that purpose.
 
@@ -63,7 +67,7 @@ my $SPARK_VERSION = "2.4.0";
 ```
 
 #### 2.2 Do not declare version and scope of Spark dependencies
-Since they are already defined in sparkMavenParent, they will be ignored anyway, e.g.:
+Since they are already defined in **sparkMavenParent**, they will be ignored anyway, e.g.:
 
 ```xml
 <dependency>
@@ -87,7 +91,7 @@ Since they are already defined in sparkMavenParent, they will be ignored anyway,
 ```
 
 #### 2.4 Do not declare version of spark-testing-base dependency
-It is already defined in sparkMavenParent:
+It is already defined in **sparkMavenParent**:
 
 ```xml
 <dependency>
@@ -98,7 +102,7 @@ It is already defined in sparkMavenParent:
 ```
 
 #### 2.5 Do not overwrite the following properties
-They are already defined in sparkMavenParent:
+They are already defined in **sparkMavenParent**:
 
 ```xml
 <properties>
@@ -138,16 +142,16 @@ If  you override the Spark / Hadoop dependencies, this means that your Spark app
 
 Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop:
 - no guava dependency in your Spark applications component `pom.xml`:
-  - compilation is done with **guava-11.0.2**
-  - **guava-11.0.2** jar is NOT packaged with the Spark applications component RPM
-  - run is executed with **guava-11.0.2**
-- **guava-28.2-jre** is added in a  `<dependencies>` section in your Spark applications component `pom.xml`:
-  - compilation is done with **guava-28.2-jre**
-  - **guava-28.2-jre** jar is NOT packaged with the Spark applications component RPM
-  - run is executed with **guava-11.0.2**
-- **guava-28.2-jre** is added in a `<dependencyManagement>` section in your Spark applications component `pom.xml`:
-  - compilation is done with **guava-28.2-jre**
-  - **guava-28.2-jre** jar is packaged with the Spark applications component RPM
+  - compilation is done with _**guava-11.0.2**_
+  - _**guava-11.0.2**_ jar is NOT packaged with the Spark applications component RPM
+  - run is executed with _**guava-11.0.2**_
+- _**guava-28.2-jre**_ is added in a  `<dependencies>` section in your Spark applications component `pom.xml`:
+  - compilation is done with _**guava-28.2-jre**_
+  - _**guava-28.2-jre**_ jar is NOT packaged with the Spark applications component RPM
+  - run is executed with _**guava-11.0.2**_
+- _**guava-28.2-jre**_ is added in a `<dependencyManagement>` section in your Spark applications component `pom.xml`:
+  - compilation is done with _**guava-28.2-jre**_
+  - _**guava-28.2-jre**_ jar is packaged with the Spark applications component RPM
   - userClassPathFirst value in your spark-submit command:
-    - false or not defined: run is executed with **guava-11.0.2**
-    - true: run is executed with **guava-28.2-jre**
+    - false or not defined: run is executed with _**guava-11.0.2**_
+    - true: run is executed with _**guava-28.2-jre**_
