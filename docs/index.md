@@ -14,9 +14,11 @@ I will present below a third solution, which allows to automatically exclude fro
 
 ## Step-by-step guide
 
-### Create a parent POM with all the Hadoop / Spark dependencies
+### 1. Create a parent POM with all the Hadoop / Spark dependencies
 Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl helper script (in `src/main/scripts/createSparkMavenParentPom.pl`) for that purpose.
-- Edit the script and adapt the lines below (at the top of the files) to your environment. The command to list all the Hadoop / Spark jars (`REMOTE_CMD`) is especially important:
+
+#### 1.1 Edit the script and adapt the lines below (at the top of the files) to your environment
+The command to list all the Hadoop / Spark jars (`REMOTE_CMD`) is especially important:
 
 ```perl
 ## BEGIN - CUSTOM CONF
@@ -33,22 +35,24 @@ my $SPARK_VERSION = "2.4.0";
 ## END - CUSTOM CONF
 ```
 
-- Launch the script with the command below to generate the parent POM sparkMavenParent template:
+#### 1.2 Launch the script with the command below to generate the parent POM sparkMavenParent template:
 
 ```shell
 # the command below creates a file pom.xml.template
 ./createSparkMavenParentPom.pl -hostname HOSTNAME
 ```
 
-- N.B.: there are two requirements for this script to work properly:
-  - you need to be able to ssh to `HOSTNAME`
-  - all the Hadoop / Spark dependencies are expected to be present in the `$HOME/.m2` repository on your local machine
-- Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
-- Compile and deploy it
+N.B.: there are two requirements for this script to work properly:
+- you need to be able to ssh to `HOSTNAME`
+- all the Hadoop / Spark dependencies are expected to be present in the `$HOME/.m2` repository on your local machine
 
-### Update your Spark applications component POM
+#### 1.3 Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
 
-#### Set the POM parent to sparkMavenParent
+#### 1.4 Compile and deploy it
+
+### 2. Update your Spark applications component POM
+
+#### 2.1 Set the POM parent to sparkMavenParent
 
 ```xml
     <parent>
@@ -58,7 +62,7 @@ my $SPARK_VERSION = "2.4.0";
     </parent>
 ```
 
-#### Do not declare version and scope of Spark dependencies
+#### 2.2 Do not declare version and scope of Spark dependencies
 Since they are already defined in sparkMavenParent, they will be ignored anyway, e.g.:
 
 ```xml
@@ -72,7 +76,7 @@ Since they are already defined in sparkMavenParent, they will be ignored anyway,
 </dependency>
 ```
 
-#### Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark)
+#### 2.3 Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark)
 
 ```xml
 <dependency>
@@ -82,7 +86,7 @@ Since they are already defined in sparkMavenParent, they will be ignored anyway,
 </dependency>
 ```
 
-#### Do not declare version of spark-testing-base dependency
+#### 2.4 Do not declare version of spark-testing-base dependency
 It is already defined in sparkMavenParent:
 
 ```xml
@@ -93,7 +97,7 @@ It is already defined in sparkMavenParent:
 </dependency>
 ```
 
-#### Do not overwrite the following properties
+#### 2.5 Do not overwrite the following properties
 They are already defined in sparkMavenParent:
 
 ```xml
@@ -107,7 +111,7 @@ They are already defined in sparkMavenParent:
 </properties>
 ```
 
-#### (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten
+#### 2.6 (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten
 
 ```xml
 <dependencyManagement>
@@ -122,7 +126,7 @@ They are already defined in sparkMavenParent:
 </dependencyManagement>
 ```
 
-#### (Optional) Give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes
+#### 2.7 (Optional) Give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes
 Set the Spark configuration properties `spark.driver.userClassPathFirst` and `spark.executor.userClassPathFirst` to true when launching your applications (with e.g. spark-submit):
 ```shell
 /opt/spark/bin/spark-submit (...) --conf spark.driver.userClassPathFirst=true --conf spark.executor.userClassPathFirst=true (...)
