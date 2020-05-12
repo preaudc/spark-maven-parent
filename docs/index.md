@@ -42,7 +42,7 @@ my $SPARK_VERSION = "2.4.0";
 ./createSparkMavenParentPom.pl -hostname HOSTNAME
 ```
 
-N.B.: there are two requirements for this script to work properly:
+**N.B.**: there are two requirements for this script to work properly:
 - you need to be able to ssh to `HOSTNAME`
 - all the Hadoop / Spark dependencies are expected to be present in the `$HOME/.m2` repository on your local machine
 
