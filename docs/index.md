@@ -21,7 +21,7 @@ This solution consists in:
 ### 1. Create a parent POM with all the Hadoop / Spark dependencies
 Listing and writing down the more than 200 Hadoop / Spark dependencies being a bit tedious, I have created a quick & dirty perl helper script (in `src/main/scripts/createSparkMavenParentPom.pl`) for that purpose.
 
-#### 1.1 Edit the script and adapt the lines below (at the top of the files) to your environment
+#### 1.1 Edit the script and adapt the lines below (at the top of the file) to your environment
 
 ```perl
 ## BEGIN - CUSTOM CONF
