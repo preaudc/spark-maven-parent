@@ -8,10 +8,10 @@ use warnings;
 # pom properties
 my $HADOOP_VERSION = "2.8.3";
 my $JDK_VERSION = "1.8";
-my $SCALA_BINARY_VERSION = "2.11";
-my $SCALA_VERSION = "2.11.12";
-my $SHORT_SCALA_BINARY_VERSION = "11";
-my $SPARK_VERSION = "2.4.0";
+my $SCALA_BINARY_VERSION = "2.12";
+my $SCALA_VERSION = "2.12.10";
+my $SHORT_SCALA_BINARY_VERSION = "12";
+my $SPARK_VERSION = "2.4.5";
 ## END - CUSTOM CONF
 
 my $pom_header = qq(<?xml version="1.0" encoding="UTF-8"?>
@@ -54,9 +54,14 @@ my $pom_footer = qq(         <!-- Test dependencies -->
 
 </project>);
 
+my $hadoop_group_id = "org.apache.hadoop";
+my $mvn_search_url = "http://search.maven.org/solrsearch/select";
+my $scala_group_id = "org.scala-lang";
+my $spark_group_id = "org.apache.spark";
+
 sub get_jar_name_and_version($) {
   my ($jar) = @_;
-  my ($jar_name, $jar_version) = ($jar =~ /^([\w\-\.]+)-((?:\d+\.)*\d+(?:[-\.]\S+)?)\.jar$/);
+  my ($jar_name, $jar_version) = ($jar =~ /^([\w\-\.]+?)-((?:\d+\.)*\d+(?:[-\.]\S+)?)\.jar$/);
   return ($jar_name, $jar_version);
 }
 
@@ -78,10 +83,30 @@ sub eval_version($) {
 }
 
 # get group and artifact id from jar path in $HOME/.m2 repository
-sub get_group_and_artifact($$) {
-  my ($line, $version) = @_;
-  my ($group_id, $artifact_id) = ($line =~ /^$ENV{'HOME'}\/.m2\/repository\/(\S+)\/([^\/]+)\/$version/);
-  $group_id =~ s#/#.#g;
+sub get_group_and_artifact($$$) {
+  my ($version, $jar_name, $jar_path) = @_;
+  my ($group_id, $artifact_id);
+  if ($jar_name =~ /^spark-/) {
+    ($group_id, $artifact_id) = ($spark_group_id, $jar_name);
+  } elsif ($jar_name =~ /^hadoop-/) {
+    ($group_id, $artifact_id) = ($hadoop_group_id, $jar_name);
+  } elsif ($jar_name =~ /^scala-/ && $jar_name !~ /_$SCALA_BINARY_VERSION$/) {
+    ($group_id, $artifact_id) = ($scala_group_id, $jar_name);
+  } else {
+    my $find_line = qx(find $ENV{'HOME'}/.m2/repository -type d -name "$version" -print0 | grep -FzZ "$jar_name/$version" 2>/dev/null);
+    chomp $find_line;
+    if ($find_line ne "") {
+      ($group_id, $artifact_id) = ($find_line =~ /^$ENV{'HOME'}\/.m2\/repository\/(\S+)\/([^\/]+)\/$version/);
+      $group_id =~ s#/#.#g;
+    } elsif (-f $jar_path) {
+      $artifact_id = $jar_name;
+      $group_id = qx/curl -s "$mvn_search_url?q=1:%22\$(sha1sum $jar_path | awk '{print \$1}')%22&rows=20&wt=json" | jq -M -r '.response.docs[0].g'/;
+      chomp $group_id;
+      if ($group_id eq "null") {
+        ($group_id, $artifact_id) = (undef, undef);
+      }
+    }
+  }
   return ($group_id, $artifact_id);
 }
 
@@ -97,42 +122,38 @@ printUsage() unless (GetOptions("file=s" => \$jars_file) and defined $jars_file)
 # get the list of jars with version, dedup if necessary (priority on Spark version, then higher version)
 my $jar_list = {};
 open(FILE, "$jars_file") or die "$jars_file: $!";
-while (my $cmd_line = <FILE>) {
-  chomp $cmd_line;
-  my @path = split("/", $cmd_line);
+foreach my $jar_path (sort {$a =~ /spark/i <=> $b =~ /spark/i} <FILE>) {
+  chomp $jar_path;
+  my @path = split("/", $jar_path);
   my $jar = $path[$#path];
-  my $jar_lib = ($cmd_line =~ /spark/i) ? "spark" : "hadoop";
   my ($jar_name, $jar_version) = get_jar_name_and_version($jar);
   if (not defined $jar_list->{$jar_name}) {
-    $jar_list->{$jar_name} = $jar_version;
-  } elsif ($jar_lib eq "spark") {
-    $jar_list->{$jar_name} = $jar_version if $jar_name ne "javax.inject";
-  } elsif (eval_version($jar_version) > eval_version($jar_list->{$jar_name})) {
-    $jar_list->{$jar_name} = $jar_version;
+    $jar_list->{$jar_name} = [$jar_path, $jar_version];
+  } elsif ($jar_path =~ /spark/i) {
+    $jar_list->{$jar_name} = [$jar_path, $jar_version] if $jar_name ne "javax.inject";
+  } elsif (eval_version($jar_version) > eval_version($jar_list->{$jar_name}->[1])) {
+    $jar_list->{$jar_name} = [$jar_path, $jar_version];
   }
 }
 close FILE;
 
 # loop on each jar to get group id, artifact id and version
 my @dependencies = ();
-my @dependencies_not_in_m2_dir=();
-foreach my $k (keys %$jar_list) {
-  my $version = $jar_list->{$k};
-  my $ps_line = qx(find $ENV{'HOME'}/.m2/repository -type d -name "$version" -print0 | grep -FzZ "$k/$version" 2>/dev/null);
-  chomp $ps_line;
-  if ($ps_line ne "") {
-    my ($group_id, $artifact_id) = get_group_and_artifact($ps_line, $version);
+foreach my $jar_name (keys %$jar_list) {
+  my ($jar_path, $version) = @{$jar_list->{$jar_name}};
+  my ($group_id, $artifact_id) = get_group_and_artifact($version, $jar_name, $jar_path);
+  if (defined $group_id and defined $artifact_id) {
     $artifact_id =~ s/_$SCALA_BINARY_VERSION$/_\${scala.binary.version}/;
-    if ($group_id eq 'org.apache.hadoop') {
+    if ($group_id eq $hadoop_group_id) {
       $version =~ s/^$HADOOP_VERSION$/\${hadoop.version}/;
-    } elsif ($group_id eq 'org.apache.spark') {
+    } elsif ($group_id eq $spark_group_id) {
       $version =~ s/^$SPARK_VERSION$/\${spark.version}/;
-    } elsif ($group_id eq 'org.scala-lang') {
+    } elsif ($group_id eq $scala_group_id) {
       $version =~ s/^$SCALA_VERSION$/\${scala.version}/;
     }
     push @dependencies, ["$group_id.$artifact_id", $group_id, $artifact_id, $version];
   } else {
-    push @dependencies_not_in_m2_dir, "$k-$jar_list->{$k}.jar";
+    print STDERR "WARN Cannot find groupId for $jar_name-$version --> Excluded from POM!\n";
   }
 }
 
@@ -150,10 +171,3 @@ foreach my $dependency (sort {$a->[0] cmp $b->[0]} @dependencies) {
 }
 print POM "\n$pom_footer\n";
 close POM;
-
-# print jars whose version was not found in $HOME/.m2 repository
-open(NOT_IN_M2, '>', "jars_not_in_m2.list") or die "$!";
-foreach my $jar (sort @dependencies_not_in_m2_dir) {
-  print NOT_IN_M2 "$jar\n";
-}
-close NOT_IN_M2;
