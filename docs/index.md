@@ -44,7 +44,8 @@ my $SPARK_VERSION = "2.4.5";
 
 **N.B.**:
 - This script works best if the Hadoop / Spark jars are copied locally (Hadoop jars in a `hadoop` directory, Spark jars in a `spark` directory). This can be done with the commands below:
-  - create directory to store Hadoop and Spark jars: `mkdir extlib`
+  - create directory to store Hadoop and Spark jars:
+    - `mkdir extlib`
   - copy Hadoop jars in extlib/hadoop: `ssh <HADOOP_SPARK_HOSTNAME> "cd /opt/hadoop/share && tar -cv hadoop/*/lib/*.jar" | tar -C extlib -xf -`
   - copy Spark jars in extlib/spark: `ssh <HADOOP_SPARK_HOSTNAME> "cd /opt && tar -cv spark/jars/*.jar" | tar -C extlib -xf -`
 - _**JARS_FILE**_ is a file containing all the Hadoop / Spark jars dependencies, you can create it for example with the following command: `find extlib -type f > hadoop_spark_jars.list`
