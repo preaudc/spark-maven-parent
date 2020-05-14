@@ -44,16 +44,9 @@ my $SPARK_VERSION = "2.4.5";
 
 **N.B.**:
 - This script works best if the Hadoop / Spark jars are copied locally (Hadoop jars in a `hadoop` directory, Spark jars in a `spark` directory). This can be done with the commands below:
-
-```sh
-mkdir extlib
-# copy Hadoop jars in extlib/hadoop
-ssh <HADOOP_SPARK_HOSTNAME> "cd /opt/hadoop/share && tar -cv hadoop/*/lib/*.jar" | tar -C extlib -xf -`
-
-# copy Spark jars in extlib/spark
-ssh <HADOOP_SPARK_HOSTNAME> "cd /opt && tar -cv spark/jars/*.jar" | tar -C extlib -xf -`
-```
-
+  - create directory to store Hadoop and Spark jars: `mkdir extlib`
+  - copy Hadoop jars in extlib/hadoop: `ssh <HADOOP_SPARK_HOSTNAME> "cd /opt/hadoop/share && tar -cv hadoop/*/lib/*.jar" | tar -C extlib -xf -`
+  - copy Spark jars in extlib/spark: `ssh <HADOOP_SPARK_HOSTNAME> "cd /opt && tar -cv spark/jars/*.jar" | tar -C extlib -xf -`
 - _**JARS_FILE**_ is a file containing all the Hadoop / Spark jars dependencies, you can create it for example with the following command: `find extlib -type f > hadoop_spark_jars.list`
 - This script will scan the `$HOME/.m2` repository on your local machine to try to get the group and artifact ids from the Hadoop / Spark jar name and version (I said it was quick & dirty ;-) ). If unsuccessful, it will try to get the group id from a web service on search.maven.org using the SHA1SUM of the jar as parameter.
 
