@@ -1,6 +1,6 @@
 # How to not package Hadoop / Spark transitive dependencies in Spark applications components
 
-A Spark applications component is frequently oversized because it contains jars (i.e. Hadoop, Scala, or even Spark) which are already included by Hadoop / Spark.
+A Spark application component is frequently oversized because it contains jars (i.e. Hadoop, Scala, or even Spark) which are already included by Hadoop / Spark.
 
 Besides, these jars are useless because by default Spark always gives precedence to jars provided by Hadoop / Spark over the ones packaged with the Spark applications component.
 
