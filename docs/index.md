@@ -50,7 +50,7 @@ my $SPARK_VERSION = "2.4.5";
     - `ssh <HOSTNAME> "cd /opt/hadoop/share && tar -cv hadoop/*/lib/*.jar" | tar -C extlib -xf -`
   - copy Spark jars in extlib/spark
     - `ssh <HOSTNAME> "cd /opt && tar -cv spark/jars/*.jar" | tar -C extlib -xf -`
-- _**JARS_FILE**_ is a file containing all the Hadoop / Spark jars dependencies, you can create it for example with the following command: `find extlib -type f > hadoop_spark_jars.list`
+- _**JARS_FILE**_ is a file containing all the path of the the Hadoop / Spark jars dependencies, you can create it for example with the following command: `find extlib -type f > hadoop_spark_jars.list`
 - This script will scan the `$HOME/.m2` repository on your local machine to try to get the group and artifact ids from the Hadoop / Spark jar name and version (I said it was quick & dirty ;-) ). If unsuccessful, it will try to get the group id from a web service on search.maven.org using the SHA1SUM of the jar as parameter.
 
 #### 1.3 Complete / update the parent POM sparkMavenParent template and rename it to `pom.xml`
