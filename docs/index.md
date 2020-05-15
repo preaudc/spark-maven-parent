@@ -69,7 +69,17 @@ my $SPARK_VERSION = "2.4.5";
     </parent>
 ```
 
-#### 2.2 Do not declare version and scope of Spark dependencies
+#### 2.2 Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark)
+
+```xml
+<dependency>
+   <groupId>org.apache.hadoop</groupId>
+   <artifactId>hadoop-client</artifactId>
+   <version>${hadoop.version}</version>
+</dependency>
+```
+
+#### 2.3 Do not declare version and scope of Spark dependencies
 Since they are already defined in **sparkMavenParent**, they will be ignored anyway, e.g.:
 
 ```xml
@@ -80,16 +90,6 @@ Since they are already defined in **sparkMavenParent**, they will be ignored any
 <dependency>
    <groupId>org.apache.spark</groupId>
    <artifactId>spark-mllib_${scala.binary.version}</artifactId>
-</dependency>
-```
-
-#### 2.3 Add hadoop-client dependency if necessary (it is NOT provided by Hadoop / Spark)
-
-```xml
-<dependency>
-   <groupId>org.apache.hadoop</groupId>
-   <artifactId>hadoop-client</artifactId>
-   <version>${hadoop.version}</version>
 </dependency>
 ```
 
