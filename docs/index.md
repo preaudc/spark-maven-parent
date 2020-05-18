@@ -30,7 +30,6 @@ my $HADOOP_VERSION = "2.8.3";
 my $JDK_VERSION = "1.8";
 my $SCALA_BINARY_VERSION = "2.12";
 my $SCALA_VERSION = "2.12.10";
-my $SHORT_SCALA_BINARY_VERSION = "12";
 my $SPARK_VERSION = "2.4.5";
 ## END - CUSTOM CONF
 ```
@@ -93,18 +92,7 @@ Since they are already defined in **sparkMavenParent**, they will be ignored any
 </dependency>
 ```
 
-#### 2.4 Do not declare version of spark-testing-base dependency
-It is already defined in **sparkMavenParent**:
-
-```xml
-<dependency>
-   <groupId>com.holdenkarau</groupId>
-   <artifactId>spark-testing-base_${scala.binary.version}</artifactId>
-   <scope>test</scope>
-</dependency>
-```
-
-#### 2.5 Do not overwrite the following properties
+#### 2.4 Do not overwrite the following properties
 They are already defined in **sparkMavenParent**:
 
 ```xml
@@ -118,7 +106,7 @@ They are already defined in **sparkMavenParent**:
 </properties>
 ```
 
-#### 2.6 (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten
+#### 2.5 (Optional) Declare in a `<dependencyManagement>` section the Hadoop / Spark dependencies that DO need to be overwritten
 
 ```xml
 <dependencyManagement>
@@ -133,7 +121,7 @@ They are already defined in **sparkMavenParent**:
 </dependencyManagement>
 ```
 
-#### 2.7 (Optional) Give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes
+#### 2.6 (Optional) Give precedence to jars packaged with the component over Hadoop / Spark jars when loading classes
 Set the Spark configuration properties `spark.driver.userClassPathFirst` and `spark.executor.userClassPathFirst` to true when launching your applications (with e.g. `spark-submit`):
 ```shell
 /opt/spark/bin/spark-submit (...) --conf spark.driver.userClassPathFirst=true --conf spark.executor.userClassPathFirst=true (...)

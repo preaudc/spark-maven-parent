@@ -10,7 +10,6 @@ my $HADOOP_VERSION = "2.8.3";
 my $JDK_VERSION = "1.8";
 my $SCALA_BINARY_VERSION = "2.12";
 my $SCALA_VERSION = "2.12.10";
-my $SHORT_SCALA_BINARY_VERSION = "12";
 my $SPARK_VERSION = "2.4.5";
 ## END - CUSTOM CONF
 
@@ -32,14 +31,7 @@ my $pom_header = qq(<?xml version="1.0" encoding="UTF-8"?>
 
          <!-- External dependencies -->);
 
-my $pom_footer = qq(         <!-- Test dependencies -->
-         <dependency>
-            <groupId>com.holdenkarau</groupId>
-            <artifactId>spark-testing-base_\${scala.binary.version}</artifactId>
-            <version>\${spark.version}_0.\${short.scala.binary.version}.0</version>
-            <scope>test</scope>
-         </dependency>
-      </dependencies>
+my $pom_footer = qq(      </dependencies>
    </dependencyManagement>
 
    <!-- PROPERTIES SECTION -->
@@ -48,7 +40,6 @@ my $pom_footer = qq(         <!-- Test dependencies -->
       <jdk.version>$JDK_VERSION</jdk.version>
       <scala.binary.version>$SCALA_BINARY_VERSION</scala.binary.version>
       <scala.version>$SCALA_VERSION</scala.version>
-      <short.scala.binary.version>$SHORT_SCALA_BINARY_VERSION</short.scala.binary.version>
       <spark.version>$SPARK_VERSION</spark.version>
    </properties>
 
@@ -169,5 +160,5 @@ foreach my $dependency (sort {$a->[0] cmp $b->[0]} @dependencies) {
             <scope>provided</scope>
          </dependency>\n);
 }
-print POM "\n$pom_footer\n";
+print POM "$pom_footer\n";
 close POM;
