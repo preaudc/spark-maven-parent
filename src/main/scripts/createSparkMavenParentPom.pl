@@ -113,7 +113,7 @@ printUsage() unless (GetOptions("file=s" => \$jars_file) and defined $jars_file)
 # get the list of jars with version, dedup if necessary (priority on Spark version, then higher version)
 my $jar_list = {};
 open(FILE, "$jars_file") or die "$jars_file: $!";
-foreach my $jar_path (sort {$a =~ /spark/i <=> $b =~ /spark/i} <FILE>) {
+foreach my $jar_path (sort {$a =~ /\/spark\//i <=> $b =~ /\/spark\//i} <FILE>) {
   chomp $jar_path;
   my @path = split("/", $jar_path);
   my $jar = $path[$#path];

@@ -42,7 +42,7 @@ my $SPARK_VERSION = "2.4.5";
 ```
 
 **N.B.**:
-- This script works best if the Hadoop / Spark jars are copied locally (Hadoop jars in a `hadoop` directory, Spark jars in a `spark` directory). This can be done with the commands below:
+- This script requires that the Hadoop / Spark jars are copied locally (Hadoop jars in a `hadoop` directory, Spark jars in a `spark` directory). This can be done with the commands below:
   - create directory to store Hadoop and Spark jars
     - `mkdir extlib`
   - copy Hadoop jars in extlib/hadoop
