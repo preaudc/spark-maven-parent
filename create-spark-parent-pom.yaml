@@ -1,0 +1,21 @@
+pom_version:
+  'kelkoo_spark_maven_parent': '2.3.1-SNAPSHOT'
+  'kelkoo_maven_parent': '2.12.0'
+properties_version:
+  'hadoop_version': '2.8.3'
+  'jdk_version': '1.8'
+  'scala_binary_version': '2.12'
+  'scala_version': '2.12.10'
+  'spark_testing_base_version': '1.1.0'
+  'spark_version': '3.1.2'
+mvn_search_url: 'http://search.maven.org/solrsearch/select'
+hadoop_group_id: 'org.apache.hadoop'
+spark_group_id: 'org.apache.spark'
+artifact_suffix:
+  '_2.12': '_${scala.binary.version}'
+static_group_version:
+  'org.apache.hadoop': '${hadoop.version}'
+  'org.scala-lang': '${scala.version}'
+  'org.apache.spark': '${spark.version}'
+pom_header: "f'''<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">\n\n   <modelVersion>4.0.0</modelVersion>\n   <packaging>pom</packaging>\n\n   <!-- PROJECT DESCRIPTION SECTION -->\n   <groupId>com.kelkoogroup.dataplatform</groupId>\n   <artifactId>kelkoo-spark-maven-parent</artifactId>\n   <version>{conf['pom_version']['kelkoo_spark_maven_parent']}</version>\n\n   <name>kelkoo-spark-maven-parent</name>\n   <description>Common component for dataplatform applications</description>\n\n   <!-- PARENT SECTION -->\n   <parent>\n      <groupId>com.kelkoo</groupId>\n      <artifactId>kelkooMavenParent</artifactId>\n      <version>{conf['pom_version']['kelkoo_maven_parent']}</version>\n   </parent>\n\n   <!-- SOURCE CONTROL MANAGEMENT SECTION -->\n   <scm>\n      <connection>scm:git|git@gitlab.corp.kelkoo.net:data-platform/kelkoo-spark-maven-parent.git</connection>\n      <url>http://gitlab.corp.kelkoo.net/data-platform/kelkoo-spark-maven-parent</url>\n      <tag>HEAD</tag>\n   </scm>\n\n   <!-- DEPENDENCIES SECTION -->\n   <dependencyManagement>\n      <dependencies>\n\n         <!-- External dependencies -->'''"
+pom_footer: "'''\n         <!-- Test dependencies -->\n         <dependency>\n            <groupId>com.holdenkarau</groupId>\n            <artifactId>spark-testing-base_${scala.binary.version}</artifactId>\n            <version>${spark.version}_${spark.testing.base.version}.0</version>\n            <scope>test</scope>\n         </dependency>\n      </dependencies>\n   </dependencyManagement>\n\n   ''' + f'''<!-- PROPERTIES SECTION -->\n   <properties>\n      <hadoop.version>{conf['properties_version']['hadoop_version']}</hadoop.version>\n      <jdk.version>{conf['properties_version']['jdk_version']}</jdk.version>\n      <scala.binary.version>{conf['properties_version']['scala_binary_version']}</scala.binary.version>\n      <scala.version>{conf['properties_version']['scala_version']}</scala.version>\n      <spark.testing.base.version>{conf['properties_version']['spark_testing_base_version']}</spark.testing.base.version>\n      <spark.version>{conf['properties_version']['spark_version']}</spark.version>\n   </properties>\n\n</project>'''"
