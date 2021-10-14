@@ -95,6 +95,8 @@ def get_jar_list(jar_file, conf):
         jar_name, jar_version = get_jar_name_and_version(jar_path.name)
         if jar_name in jar_list and jar_list[jar_name]['group_id'] not in conf['static_group_version']:
             if JarVersion(jar_version) > JarVersion(jar_list[jar_name]['version']):
+                jar_group = get_group(jar_version, jar_name, jar_path, conf)
+                jar_list[jar_name]['group_id'] = jar_group
                 jar_list[jar_name]['version'] = jar_version
         else:
             jar_group = get_group(jar_version, jar_name, jar_path, conf)
