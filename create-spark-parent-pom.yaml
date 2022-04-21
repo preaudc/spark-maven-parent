@@ -8,7 +8,7 @@ properties_version:
   'scala_version': '2.12.10'
   'spark_testing_base_version': '1.1.0'
   'spark_version': '3.1.2'
-mvn_search_url: 'http://search.maven.org/solrsearch/select'
+mvn_search_url: 'https://search.maven.org/solrsearch/select'
 hadoop_group_id: 'org.apache.hadoop'
 spark_group_id: 'org.apache.spark'
 artifact_suffix:

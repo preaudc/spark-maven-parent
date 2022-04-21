@@ -46,7 +46,7 @@ my $pom_footer = qq(      </dependencies>
 </project>);
 
 my $hadoop_group_id = "org.apache.hadoop";
-my $mvn_search_url = "http://search.maven.org/solrsearch/select";
+my $mvn_search_url = "https://search.maven.org/solrsearch/select";
 my $scala_group_id = "org.scala-lang";
 my $spark_group_id = "org.apache.spark";
 
@@ -91,7 +91,9 @@ sub get_group_and_artifact($$$) {
       $group_id =~ s#/#.#g;
     } elsif (-f $jar_path) {
       $artifact_id = $jar_name;
-      $group_id = qx/curl -s "$mvn_search_url?q=1:%22\$(sha1sum $jar_path | awk '{print \$1}')%22&rows=20&wt=json" | jq -M -r '.response.docs[0].g'/;
+      sleep(1);
+      print "using $mvn_search_url for $artifact_id\n";
+      $group_id = qx/curl -s "$mvn_search_url?q=1:\$(sha1sum $jar_path | awk '{print \$1}')&rows=20&wt=json" | jq -M -r '.response.docs[0].g'/;
       chomp $group_id;
       if ($group_id eq "null") {
         ($group_id, $artifact_id) = (undef, undef);

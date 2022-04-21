@@ -28,24 +28,6 @@
             <scope>provided</scope>
          </dependency>
          <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-            <version>1.10.6</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-kms</artifactId>
-            <version>1.10.6</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.10.6</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
             <groupId>com.carrotsearch</groupId>
             <artifactId>hppc</artifactId>
             <version>0.7.2</version>
@@ -202,12 +184,6 @@
             <scope>provided</scope>
          </dependency>
          <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>azure-storage</artifactId>
-            <version>2.2.0</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>3.9</version>
@@ -337,12 +313,6 @@
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>
             <version>1.8</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
             <scope>provided</scope>
          </dependency>
          <dependency>
@@ -695,61 +665,13 @@
          </dependency>
          <dependency>
             <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-ant</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-archives</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-auth</artifactId>
             <version>${hadoop.version}</version>
             <scope>provided</scope>
          </dependency>
          <dependency>
             <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-aws</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-azure</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-datajoin</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-distcp</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-extras</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-gridmix</artifactId>
             <version>${hadoop.version}</version>
             <scope>provided</scope>
          </dependency>
@@ -821,31 +743,13 @@
          </dependency>
          <dependency>
             <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-examples</artifactId>
+            <version>${hadoop.version}</version>
+            <scope>provided</scope>
+         </dependency>
+         <dependency>
+            <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-nfs</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-openstack</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-rumen</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-sls</artifactId>
-            <version>${hadoop.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-streaming</artifactId>
             <version>${hadoop.version}</version>
             <scope>provided</scope>
          </dependency>
@@ -912,6 +816,12 @@
          <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-yarn-server-sharedcachemanager</artifactId>
+            <version>${hadoop.version}</version>
+            <scope>provided</scope>
+         </dependency>
+         <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-server-tests</artifactId>
             <version>${hadoop.version}</version>
             <scope>provided</scope>
          </dependency>
