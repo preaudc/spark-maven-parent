@@ -16,14 +16,14 @@ class JarVersion:
     def __init__(self, version):
         self.version = version
 
-    def __lt__(self, other):
-        return self._eval_version() < other._eval_version() or (
-            self._eval_version() == other._eval_version() and
-                len(self.version) > len(other.version)
-        )
+    def __eq__(self, other):
+        return self._eval_version() == other._eval_version()
+
+    def __gt__(self, other):
+        return self._eval_version() > other._eval_version()
 
     def _eval_version(self):
-        version_parts = re.match(r'(\d+)(?:\.(\d+)(?:\.(\d+)(?:\.(\d+))?)?)?', self.version).groups()
+        version_parts = list(filter(lambda part: re.match(r'^\d+$', part), re.split(r'(\d+)', self.version)))
         val_version = 0
         for i in range(len(version_parts)):
             if version_parts[i] is not None:
@@ -73,6 +73,7 @@ def get_group_from_m2_repo(jar_path, conf):
 # get group from maven search central WS
 def get_group_from_mvn_ws(jar_path, conf):
     time.sleep(1)
+    print(f"using {conf['mvn_search_url']} for {jar_path}");
     jar_group = None
     parameters = {
         'q': f'1:"{sha1sum(jar_path)}"',
@@ -88,13 +89,19 @@ def get_group_from_mvn_ws(jar_path, conf):
         print(f'WARN Cannot find group id for {jar_path} --> Excluded from POM!')
     return jar_group
 
+def use_this_jar(this_jar_priority, this_jar_version, other_jar):
+    return (this_jar_priority >= other_jar['priority'] and
+        JarVersion(this_jar_version) > JarVersion(other_jar['version']))
+
 def get_jar_list(jar_file, conf):
     jar_list = {}
     for jar in read_jars(jar_file):
         jar_path = Path(jar)
         jar_name, jar_version = get_jar_name_and_version(jar_path.name)
+        jar_priority = conf['parent_priority'][jar_path.parts[1]]
         if jar_name in jar_list and jar_list[jar_name]['group_id'] not in conf['static_group_version']:
-            if JarVersion(jar_version) > JarVersion(jar_list[jar_name]['version']):
+            if use_this_jar(jar_priority, jar_version, jar_list[jar_name]):
+                print(f"{jar_path} - {jar_name} --> {jar_version} - {jar_list[jar_name]['version']}")
                 jar_group = get_group(jar_version, jar_name, jar_path, conf)
                 jar_list[jar_name]['group_id'] = jar_group
                 jar_list[jar_name]['version'] = jar_version
@@ -102,6 +109,7 @@ def get_jar_list(jar_file, conf):
             jar_group = get_group(jar_version, jar_name, jar_path, conf)
             if jar_group is not None:
                 jar_list[jar_name] = {
+                    'priority': conf['parent_priority'][jar_path.parts[1]],
                     'group_id': jar_group,
                     'artifact_id': replace_artifact_suffix(jar_name, conf),
                     'version': set_version(jar_version, jar_group, conf)
@@ -121,7 +129,7 @@ def parse_args() -> dict:
     parser = argparse.ArgumentParser(description='Create Maven POM to package Spark libraries.')
     parser.add_argument('input_file', metavar='FILE', help='input file containing jars path')
     parser.add_argument('--provided', action='store_true', help='set dependencies as provided')
-    parser.add_argument('--output_file', help='output POM file')
+    parser.add_argument('--output-file', help='output POM file')
     return parser.parse_args()
 
 def read_jars(path) -> dict:
@@ -145,9 +153,11 @@ def set_version(jar_version, jar_group, conf):
 def write_pom(jar_list, args, conf):
     if args.output_file:
         with open(args.output_file, 'w') as f:
-            print(eval(conf['pom_header']), file=f)
+            for line in conf['pom_header']:
+                print(eval(line), file=f)
             print(get_dependencies(jar_list, args.provided), file=f)
-            print(eval(conf['pom_footer']), file=f)
+            for line in conf['pom_footer']:
+                print(eval(line), file=f)
         f.close()
     else:
         print(get_dependencies(jar_list, args.provided))

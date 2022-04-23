@@ -9,4 +9,4 @@ mkdir -p extlib/spark
 (cd bintar/spark/spark-2.4.5-bin-without-hadoop-scala-2.12 && tar -cv jars) | tar -C extlib/spark -xf -
 
 # create jars file
-find extlib -type f ! -name "*-tests.jar" > hadoop_spark_jars.list
+find extlib/{spark,hadoop} -type f ! -name "*-tests.jar" > hadoop_spark_jars.list
