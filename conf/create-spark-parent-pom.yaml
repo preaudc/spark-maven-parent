@@ -3,18 +3,15 @@ project_pom:
   'artifact_id': 'spark-maven-parent'
   'version': '1.0.0-SNAPSHOT'
   'description': 'Parent POM for Spark applications components'
+properties_jar:
+  'hadoop_version': 'hadoop-yarn-server-web-proxy'
+  'scala_version': 'scala-compiler'
+  'spark_version': 'spark-core'
 properties_version:
-  'hadoop_version': '2.8.3'
   'jdk_version': '1.8'
-  'scala_binary_version': '2.12'
-  'scala_version': '2.12.10'
-  'spark_testing_base_version': '1.1.0'
-  'spark_version': '2.4.5'
 mvn_search_url: 'https://search.maven.org/solrsearch/select'
 hadoop_group_id: 'org.apache.hadoop'
 spark_group_id: 'org.apache.spark'
-artifact_suffix:
-  '_2.12': '_${scala.binary.version}'
 static_group_version:
   'org.apache.hadoop': '${hadoop.version}'
   'org.scala-lang': '${scala.version}'
@@ -28,29 +25,27 @@ pom_header:
   - "''"
   - "'''   <!-- PROJECT DESCRIPTION SECTION -->'''"
   - "'''   <modelVersion>4.0.0</modelVersion>'''"
-  - "f'''   <groupId>{conf['project_pom']['group_id']}</groupId>'''"
-  - "f'''   <artifactId>{conf['project_pom']['artifact_id']}</artifactId>'''"
-  - "f'''   <version>{conf['project_pom']['version']}</version>'''"
+  - "f'''   <groupId>{self.conf['project_pom']['group_id']}</groupId>'''"
+  - "f'''   <artifactId>{self.conf['project_pom']['artifact_id']}</artifactId>'''"
+  - "f'''   <version>{self.conf['project_pom']['version']}</version>'''"
   - "'''   <packaging>pom</packaging>'''"
-  - "f'''   <name>{conf['project_pom']['artifact_id']}</name>'''"
-  - "f'''   <description>{conf['project_pom']['description']}</description>'''"
+  - "f'''   <name>{self.conf['project_pom']['artifact_id']}</name>'''"
+  - "f'''   <description>{self.conf['project_pom']['description']}</description>'''"
   - "''"
   - "'''   <!-- DEPENDENCIES SECTION -->'''"
   - "'''   <dependencyManagement>'''"
   - "'''      <dependencies>'''"
-  - "''"
-  - "'''         <!-- External dependencies -->'''"
 pom_footer:
   - "'''      </dependencies>'''"
   - "'''   </dependencyManagement>'''"
   - "''"
   - "'''   <!-- PROPERTIES SECTION -->'''"
   - "'''   <properties>'''"
-  - "f'''      <hadoop.version>{conf['properties_version']['hadoop_version']}</hadoop.version>'''"
-  - "f'''      <jdk.version>{conf['properties_version']['jdk_version']}</jdk.version>'''"
-  - "f'''      <scala.binary.version>{conf['properties_version']['scala_binary_version']}</scala.binary.version>'''"
-  - "f'''      <scala.version>{conf['properties_version']['scala_version']}</scala.version>'''"
-  - "f'''      <spark.version>{conf['properties_version']['spark_version']}</spark.version>'''"
+  - "f'''      <hadoop.version>{self.conf['properties_version']['hadoop_version']}</hadoop.version>'''"
+  - "f'''      <jdk.version>{self.conf['properties_version']['jdk_version']}</jdk.version>'''"
+  - "f'''      <scala.binary.version>{self.conf['properties_version']['scala_binary_version']}</scala.binary.version>'''"
+  - "f'''      <scala.version>{self.conf['properties_version']['scala_version']}</scala.version>'''"
+  - "f'''      <spark.version>{self.conf['properties_version']['spark_version']}</spark.version>'''"
   - "'''   </properties>'''"
   - "''"
   - "'''</project>'''"
