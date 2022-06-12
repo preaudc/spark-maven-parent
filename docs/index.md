@@ -160,15 +160,15 @@ If you override the Spark / Hadoop dependencies, this means that your Spark appl
 Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop-2.8.3:
 - no guava dependency in your Spark applications component `pom.xml`:
   - compilation is done with _**guava-11.0.2**_
-  - _**guava-11.0.2**_ jar is NOT packaged with the Spark applications component RPM
+  - _**guava-11.0.2**_ jar is NOT packaged with the Spark applications component
   - run is executed with _**guava-11.0.2**_
 - _**guava-28.2-jre**_ is added in a `<dependencies>` section in your Spark applications component `pom.xml`:
   - compilation is done with _**guava-28.2-jre**_
-  - _**guava-28.2-jre**_ jar is NOT packaged with the Spark applications component RPM
+  - _**guava-28.2-jre**_ jar is NOT packaged with the Spark applications component
   - run is executed with _**guava-11.0.2**_
 - _**guava-28.2-jre**_ is added in a `<dependencyManagement>` section in your Spark applications component `pom.xml`:
   - compilation is done with _**guava-28.2-jre**_
-  - _**guava-28.2-jre**_ jar is packaged with the Spark applications component RPM
+  - _**guava-28.2-jre**_ jar is packaged with the Spark applications component
   - userClassPathFirst value in your `spark-submit` command:
     - false or not defined: run is executed with _**guava-11.0.2**_
     - true: run is executed with _**guava-28.2-jre**_
@@ -176,21 +176,21 @@ Let's look at an example with the guava library, which version 11.0.2 is include
 Another example with the json4s libraries, which version 3.5.3 is included by Spark-2.4.5:
 - no json4s dependency in your Spark applications component `pom.xml`:
   - compilation is done with _**json4s-3.5.3**_
-  - _**json4s-3.5.3**_ jar is NOT packaged with the Spark applications component RPM
+  - _**json4s-3.5.3**_ jar is NOT packaged with the Spark applications component
   - run is executed with _**json4s-3.5.3**_
 - _**json4s-3.2.11**_ is added in a `<dependencies>` section in your Spark applications component `pom.xml`:
   - compilation is done with _**json4s-3.2.11**_
-  - _**json4s-3.2.11**_ jar is NOT packaged with the Spark applications component RPM
+  - _**json4s-3.2.11**_ jar is NOT packaged with the Spark applications component
   - run is executed with _**json4s-3.5.3**_
 - _**json4s-3.2.11**_ is added in a `<dependencyManagement>` section in your Spark applications component `pom.xml`:
   - compilation is done with _**json4s-3.2.11**_
-  - _**json4s-3.2.11**_ jar is NOT packaged with the Spark applications component RPM
+  - _**json4s-3.2.11**_ jar is NOT packaged with the Spark applications component
   - userClassPathFirst value in your `spark-submit` command:
     - false or not defined: run is executed with _**json4s-3.5.3**_
-    - true: run is executed with _**json4s-3.2.11**_ (and fails because _**json4s-3.2.11**_ jar is not packaged with the Spark applications component RPM)
+    - true: run is executed with _**json4s-3.2.11**_ (and fails because _**json4s-3.2.11**_ jar is not packaged with the Spark applications component)
 - _**json4s-3.2.11**_ is added both in a `<dependencyManagement>` section and in a `<dependencies>` section in your Spark applications component pom.xml:
   - compilation is done with _**json4s-3.2.11**_
-  - _**json4s-3.2.11**_ jar is packaged with the Spark applications component RPM
+  - _**json4s-3.2.11**_ jar is packaged with the Spark applications component
   - userClassPathFirst value in your `spark-submit` command:
     - false or not defined: run is executed with _**json4s-3.5.3**_
     - true: run is executed with _**json4s-3.2.11**_
