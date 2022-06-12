@@ -46,7 +46,9 @@ the steps below:
   - create a `extlib` directory to store (Hadoop and) Spark jars
   - copy Hadoop jars in extlib/hadoop (if you use a pre-built Apache Spark package with user-provided Apache Hadoop)
   - copy Spark jars in extlib/spark
-  - create the JARS_FILE with the following command: `find extlib/{spark,hadoop} -type f ! -name "*-tests.jar" 2>/dev/null > hadoop_spark_jars.list`
+  - create the JARS_FILE with the following command: ```sh
+find extlib/{spark,hadoop} -type f ! -name "*-tests.jar" 2>/dev/null > hadoop_spark_jars.list`
+```
 - The `create-spark-parent-pom.py` script will scan the `$HOME/.m2` repository on your local machine to try to get the group and artifact ids from the Spark / Hadoop jar name and version (I said it was quick & dirty ;-) ). If unsuccessful, it will try to get the group id from a web service on search.maven.org using the SHA1SUM of the jar as parameter.
 
 #### 1.3 Complete / update the parent POM spark-maven-parent template and rename it to `pom.xml`
