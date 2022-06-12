@@ -94,12 +94,11 @@ They are already defined in **spark-maven-parent**:
 
 ```xml
 <properties>
-   <hadoop.version>2.8.3</hadoop.version>
+   <hadoop.version>3.3.1</hadoop.version>
    <jdk.version>1.8</jdk.version>
-   <scala.binary.version>2.11</scala.binary.version>
-   <scala.version>2.11.12</scala.version>
-   <short.scala.binary.version>11</short.scala.binary.version>
-   <spark.version>2.4.0</spark.version>
+   <scala.binary.version>2.13</scala.binary.version>
+   <scala.version>2.13.5</scala.version>
+   <spark.version>3.2.1</spark.version>
 </properties>
 ```
 
