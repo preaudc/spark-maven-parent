@@ -23,7 +23,7 @@ This solution consists in:
 Listing and writing down the more than 200 Spark / Hadoop dependencies being a bit tedious, I have created a quick & dirty python helper script ([create-spark-parent-pom.py](https://github.com/preaudc/spark-maven-parent/blob/master/create-spark-parent-pom.py)) for that purpose.
 
 #### 1.1 Edit the configuration file ([conf/create-spark-parent-pom.yaml](https://github.com/preaudc/spark-maven-parent/blob/master/conf/create-spark-parent-pom.yaml)) and adapt the lines below (at the top of the file) to your environment
-```json
+```yaml
 project_pom:
   'group_id': 'my.group.id'
   'artifact_id': 'spark-maven-parent'
