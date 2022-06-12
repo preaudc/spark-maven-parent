@@ -3,12 +3,12 @@ project_pom:
   'artifact_id': 'spark-maven-parent'
   'version': '1.0.0-SNAPSHOT'
   'description': 'Parent POM for Spark applications components'
+properties_version:
+  'jdk_version': '1.8'
 properties_jar:
   'hadoop_version': 'hadoop-yarn-server-web-proxy'
   'scala_version': 'scala-compiler'
   'spark_version': 'spark-core'
-properties_version:
-  'jdk_version': '1.8'
 mvn_search_url: 'https://search.maven.org/solrsearch/select'
 hadoop_group_id: 'org.apache.hadoop'
 spark_group_id: 'org.apache.spark'
