@@ -104,7 +104,7 @@ They are already defined in **spark-maven-parent**:
 
 #### 2.5 (Optional) Declare in a `<dependencyManagement>` section the Spark / Hadoop dependencies that DO need to be overwritten
 
---> If the dependency version is greater than the Spark / Hadoop dependency one
+&rarr; If the dependency version is greater than the Spark / Hadoop dependency one
 
 Declare this dependency in a `<dependencyManagement>` section:
 ```xml
@@ -120,7 +120,7 @@ Declare this dependency in a `<dependencyManagement>` section:
 </dependencyManagement>
 ```
 
---> If the dependency version is lower than the Spark / Hadoop dependency one
+&rarr; If the dependency version is lower than the Spark / Hadoop dependency one
 
 Declare this dependency in a `<dependencyManagement>` section:
 ```xml
