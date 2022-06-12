@@ -106,8 +106,7 @@ They are already defined in **spark-maven-parent**:
 
 If the dependency version is greater than the Spark / Hadoop dependency one:
 
-Declare this dependency in a <dependencyManagement> section:
-
+Declare this dependency in a `<dependencyManagement>` section:
 ```xml
 <dependencyManagement>
    <dependencies>
@@ -123,8 +122,7 @@ Declare this dependency in a <dependencyManagement> section:
 
 If the dependency version is lower than the Spark / Hadoop dependency one:
 
-Declare this dependency in a <dependencyManagement> section:
-
+Declare this dependency in a `<dependencyManagement>` section:
 ```xml
 <dependencyManagement>
    <dependencies>
@@ -138,8 +136,7 @@ Declare this dependency in a <dependencyManagement> section:
 </dependencyManagement>
 ```
 
-Declare also this dependency (without version and scope) in a <dependencies> section:
-
+Declare also this dependency (without version and scope) in a `<dependencies>` section:
 ```xml
 <dependencies>
    (...)
@@ -160,7 +157,7 @@ Set the Spark configuration properties `spark.driver.userClassPathFirst` and `sp
 ## Notes on Spark / Hadoop dependency override
 If you override the Spark / Hadoop dependencies, this means that your Spark application may be compiled and run with a different version of the library.
 
-Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop:
+Let's look at an example with the guava library, which version 11.0.2 is included by Hadoop-2.8.3:
 - no guava dependency in your Spark applications component `pom.xml`:
   - compilation is done with _**guava-11.0.2**_
   - _**guava-11.0.2**_ jar is NOT packaged with the Spark applications component RPM
@@ -176,8 +173,7 @@ Let's look at an example with the guava library, which version 11.0.2 is include
     - false or not defined: run is executed with _**guava-11.0.2**_
     - true: run is executed with _**guava-28.2-jre**_
 
-Another example with the json4s libraries, which version 3.5.3 is included by Spark:
-
+Another example with the json4s libraries, which version 3.5.3 is included by Spark-2.4.5:
 - no json4s dependency in your Spark applications component `pom.xml`:
   - compilation is done with _**json4s-3.5.3**_
   - _**json4s-3.5.3**_ jar is NOT packaged with the Spark applications component RPM
