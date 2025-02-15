@@ -194,3 +194,9 @@ Another example with the json4s libraries, which version 3.5.3 is included by Sp
   - userClassPathFirst value in your `spark-submit` command:
     - false or not defined: run is executed with _**json4s-3.5.3**_
     - true: run is executed with _**json4s-3.2.11**_
+
+## About the author
+
+Christophe Préaud is data architect at [Verkor](https://verkor.com).
+
+You can connect with him on [LinkedIn](https://www.linkedin.com/in/christophe-pr%C3%A9aud-184023155).
